@@ -80,6 +80,7 @@ then:
 app:badgeBackgroundColor="@color/badge_background_color"
 app:badgeTextColor="@color/badge_text_color"
 ```
-you also change every property programmatically, look at class documentation for more information. 
-Feel free to make pull requests and open issues if you meet any. 
+you also can change every property programmatically, look at class documentation for more information.
+# Contribution
+Feel free to make pull requests and open issues if you meet any.   
 Please add your app name if you use this library in the issues. I will add your app into the list. 
