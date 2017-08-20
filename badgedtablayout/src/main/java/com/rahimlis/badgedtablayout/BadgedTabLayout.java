@@ -173,7 +173,7 @@ public class BadgedTabLayout extends TabLayout {
         tab.setCustomView(makeCustomView(tab, R.layout.badged_tab));
     }
 
-    
+
     /**
      * takes primary and primaryDark colors from context
      *
