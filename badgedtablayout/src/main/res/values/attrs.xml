@@ -2,6 +2,7 @@
 <resources>
     <declare-styleable name="BadgedTabLayout">
         <attr name="badgeTextColor" format="color" />
+        <attr name="badgeTextSize" format="dimension" />
         <attr name="badgeSelectedTextColor" format="color" />
         <attr name="badgeBackgroundColor" format="color" />
         <attr name="badgeSelectedBackgroundColor" format="color" />

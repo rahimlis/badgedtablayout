@@ -30,6 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:badgeBackgroundColor="@color/badge_background_color"
+            app:badgeTextSize="11sp"
             />
 
     </android.support.design.widget.AppBarLayout>

@@ -32,7 +32,7 @@ public class BadgedTabLayout extends TabLayout {
 
     protected ColorStateList badgeBackgroundColors;
     protected ColorStateList badgeTextColors;
-
+    protected float badgeTextSize = 0;
 
     public BadgedTabLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -55,6 +55,8 @@ public class BadgedTabLayout extends TabLayout {
             if (a.hasValue(R.styleable.BadgedTabLayout_badgeTextColor))
                 badgeTextColors = a.getColorStateList(R.styleable.BadgedTabLayout_badgeTextColor);
 
+            if (a.hasValue(R.styleable.BadgedTabLayout_badgeTextSize))
+                badgeTextSize = a.getDimension(R.styleable.BadgedTabLayout_badgeTextSize, 0);
 
             // We have an explicit selected text color set, so we need to make merge it with the
             // current colors. This is exposed so that developers can use theme attributes to set
@@ -79,6 +81,14 @@ public class BadgedTabLayout extends TabLayout {
         return badgeBackgroundColors;
     }
 
+
+    public float getBadgeTextSize() {
+        return badgeTextSize;
+    }
+
+    public void setBadgeTextSize(float badgeTextSize) {
+        this.badgeTextSize = badgeTextSize;
+    }
 
     /**
      * sets badge background color
@@ -136,6 +146,10 @@ public class BadgedTabLayout extends TabLayout {
 
         TextView badge = (TextView) view.findViewById(R.id.textview_tab_badge);
         badge.setTextColor(badgeTextColors);
+
+        if (badgeTextSize != 0)
+            badge.setTextSize(TypedValue.COMPLEX_UNIT_PX, badgeTextSize);
+
         DrawableCompat.setTintList(badge.getBackground(), badgeBackgroundColors);
         return view;
     }
@@ -146,9 +160,10 @@ public class BadgedTabLayout extends TabLayout {
      */
     public void setBadgeText(int index, @Nullable String text) {
         TabLayout.Tab tab = getTabAt(index);
-        if (tab == null || tab.getCustomView() == null)
+        if (tab == null || tab.getCustomView() == null) {
+            Log.e("BadgedTabLayout", "Tab is null. Not setting custom view");
             return;
-
+        }
         TextView badge = (TextView) tab.getCustomView().findViewById(R.id.textview_tab_badge);
         TextView tabText = (TextView) tab.getCustomView().findViewById(R.id.textview_tab_title);
 
@@ -156,7 +171,7 @@ public class BadgedTabLayout extends TabLayout {
             badge.setVisibility(View.GONE);
             tabText.setMaxWidth(Integer.MAX_VALUE);
         } else {
-            int maxWidth = getContext().getResources().getDimensionPixelSize(R.dimen.tab_text_max_width);
+            int maxWidth = getResources().getDimensionPixelSize(R.dimen.tab_text_max_width);
             badge.setText(text);
             tabText.setMaxWidth(maxWidth);
             badge.setVisibility(View.VISIBLE);
@@ -193,7 +208,8 @@ public class BadgedTabLayout extends TabLayout {
 
     /**
      * Creates color states list out of two given params
-     * @param defaultColor color for state_selected = false
+     *
+     * @param defaultColor  color for state_selected = false
      * @param selectedColor color for state_selected = true
      * @return {@link ColorStateList} object
      */

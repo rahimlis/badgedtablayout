@@ -56,17 +56,9 @@ public class MainActivity extends AppCompatActivity {
         BadgedTabLayout tabLayout = (BadgedTabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        tabLayout.setBadgeText(0,null);
-        tabLayout.setBadgeText(1,"1");
+        tabLayout.setBadgeText(0,"1");
+        tabLayout.setBadgeText(1,null);
         tabLayout.setBadgeText(2,"13213131");
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
     }
 
