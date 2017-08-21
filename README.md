@@ -1,5 +1,6 @@
 # BadgedTabLayout
 [![](https://jitpack.io/v/rahimlis/badgedtablayout.svg)](https://jitpack.io/#rahimlis/badgedtablayout)
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-BadgedTabLayout-brightgreen.svg?style=plastic)](https://android-arsenal.com/details/1/6087)
 
 Did you see those small badges indicating new messages count in WhatsApp near your chats? 
 You can achieve the same result using this library. It is created to add small circled badges in tab layout.
