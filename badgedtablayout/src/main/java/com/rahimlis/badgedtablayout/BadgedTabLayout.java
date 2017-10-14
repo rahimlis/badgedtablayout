@@ -3,18 +3,21 @@ package com.rahimlis.badgedtablayout;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.transition.TransitionManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -33,6 +36,8 @@ public class BadgedTabLayout extends TabLayout {
     protected ColorStateList badgeBackgroundColors;
     protected ColorStateList badgeTextColors;
     protected float badgeTextSize = 0;
+    protected float tabTextSize = 0;
+
 
     public BadgedTabLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -57,6 +62,10 @@ public class BadgedTabLayout extends TabLayout {
 
             if (a.hasValue(R.styleable.BadgedTabLayout_badgeTextSize))
                 badgeTextSize = a.getDimension(R.styleable.BadgedTabLayout_badgeTextSize, 0);
+
+            if (a.hasValue(R.styleable.BadgedTabLayout_tabTextSize))
+                tabTextSize = a.getDimension(R.styleable.BadgedTabLayout_tabTextSize, 0);
+
 
             // We have an explicit selected text color set, so we need to make merge it with the
             // current colors. This is exposed so that developers can use theme attributes to set
@@ -122,6 +131,9 @@ public class BadgedTabLayout extends TabLayout {
     }
 
 
+    /**
+     * Invalidates the tab views
+     */
     public void updateTabViews() {
         for (int i = 0; i < getTabCount(); i++) {
             TabLayout.Tab tab = getTabAt(i);
@@ -140,10 +152,56 @@ public class BadgedTabLayout extends TabLayout {
     private View makeCustomView(TabLayout.Tab tab, int resId) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View view = inflater.inflate(resId, null);
-        TextView title = (TextView) view.findViewById(R.id.textview_tab_title);
-        title.setTextColor(getTabTextColors());
-        title.setText(tab.getText());
 
+        makeCustomTitle(tab, view);
+
+        makeCustomIcon(tab, view);
+
+        makeBadge(view);
+
+        return view;
+    }
+
+    /**
+     * @param tab  for which custom icon is created
+     * @param view custom view created from badged_tab.xml
+     */
+    private void makeCustomIcon(Tab tab, View view) {
+        if (tab.getIcon() == null) {
+            Log.e("BadgedTabLayout", "Tab icon is null. Not setting icon.");
+            return;
+        }
+
+        ImageView icon = (ImageView) view.findViewById(R.id.imageview_tab_icon);
+
+        DrawableCompat.setTintList(tab.getIcon(), getTabTextColors());
+
+        icon.setImageDrawable(tab.getIcon());
+
+        icon.setVisibility(VISIBLE);
+    }
+
+
+    /**
+     * @param position of tab where icon need to be set
+     * @param resourse drawable resourse of vector icon
+     */
+    public void setIcon(int position, @DrawableRes int resourse) {
+        Tab tab = getTabAt(position);
+
+        if (tab == null)
+            return;
+
+        tab.setIcon(resourse);
+
+        makeCustomIcon(tab, tab.getCustomView());
+    }
+
+
+    /**
+     * @param view custom view, manually inflated from badged_tab.xml
+     */
+    private void makeBadge(View view) {
         TextView badge = (TextView) view.findViewById(R.id.textview_tab_badge);
         badge.setTextColor(badgeTextColors);
 
@@ -151,7 +209,27 @@ public class BadgedTabLayout extends TabLayout {
             badge.setTextSize(TypedValue.COMPLEX_UNIT_PX, badgeTextSize);
 
         DrawableCompat.setTintList(badge.getBackground(), badgeBackgroundColors);
-        return view;
+    }
+
+
+    /**
+     * @param tab  for which custom title is created
+     * @param view custom view, manually inflated from badged_tab.xml
+     */
+    private void makeCustomTitle(Tab tab, View view) {
+        TextView title = (TextView) view.findViewById(R.id.textview_tab_title);
+
+        title.setTextColor(getTabTextColors());
+
+        if (tabTextSize != 0)
+            title.setTextSize(tabTextSize);
+
+        if (!TextUtils.isEmpty(tab.getText()))
+            title.setText(tab.getText());
+
+        else
+            title.setVisibility(GONE);
+
     }
 
     /**

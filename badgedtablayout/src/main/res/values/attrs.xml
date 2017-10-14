@@ -6,5 +6,6 @@
         <attr name="badgeSelectedTextColor" format="color" />
         <attr name="badgeBackgroundColor" format="color" />
         <attr name="badgeSelectedBackgroundColor" format="color" />
+        <attr name="tabTextSize" format="dimension" />
     </declare-styleable>
 </resources>

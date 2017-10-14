@@ -49,7 +49,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         tabLayout = (BadgedTabLayout) findViewById(R.id.tabs);
+
         tabLayout.setupWithViewPager(mViewPager);
+
+        tabLayout.setIcon(0, R.drawable.ic_favorite);
+        tabLayout.setIcon(1, R.drawable.ic_shopping);
 
         tabLayout.setBadgeText(0, String.valueOf(counter));
 
@@ -82,12 +86,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+        if (tabLayout == null)
+            return;
 
         if (v.getId() == R.id.button_add) {
-            tabLayout.setBadgeText(0, String.valueOf(++counter));
+            tabLayout.setBadgeText(tabLayout.getSelectedTabPosition(), String.valueOf(++counter));
         } else {
-
-            tabLayout.setBadgeText(0, null);
+            tabLayout.setBadgeText(tabLayout.getSelectedTabPosition(), null);
         }
     }
 
@@ -119,9 +124,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "SECTIONS 1";
+                    return "Section";
                 case 1:
-                    return "SECT 2";
+                    return "";
                 case 2:
                     return "SECT 3";
             }
