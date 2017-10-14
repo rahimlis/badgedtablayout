@@ -20,7 +20,7 @@ allprojects {
 
 ```groovy
 dependencies {
-  compile 'com.github.rahimlis:badgedtablayout:v1.0.1'
+  compile 'com.github.rahimlis:badgedtablayout:v1.1'
 }
 ```
 
@@ -53,18 +53,24 @@ to set text of the badge use:
   //if you want to hide a badge pass null as a second parameter
   tablayout.setBadgeText(0,null);
 ```
+to set icon to the tab use: 
+
+```java
+tabLayout.setIcon(0, R.drawable.ic_favorite); // 0 is the position of tab where icon should be added
+tabLayout.setIcon(1, R.drawable.ic_shopping);
+```
+
 **Note:** by default badges are hidden. You need to set some text to show it up.
 
 # Customization
-you can customize tab text colors as if you would do it for tabLayout
+you can customize tab text colors and size as if you would do it for tabLayout
 ```xml
 app:tabTextColor="@color/your_unselected_text_color"
 app:tabSelectedTextColor="@color/your_selected_text_color"
+app:tabTextSize="11sp"
 ```
 additionally you can change badge background color, as well as badge text color and text size
 ```xml
-app:tabTextColor="@color/your_unselected_text_color"
-app:tabSelectedTextColor="@color/your_selected_text_color"
 app:badgeTextColor="@color/your_selected_color"
 app:badgeSelectedTextColor="@color/your_selected_color"
 app:badgeBackgroundColor="@color/your_selected_color"
