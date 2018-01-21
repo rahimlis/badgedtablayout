@@ -20,7 +20,7 @@ allprojects {
 
 ```groovy
 dependencies {
-  compile 'com.github.rahimlis:badgedtablayout:v1.1'
+  compile 'com.github.rahimlis:badgedtablayout:v1.2'
 }
 ```
 
@@ -58,6 +58,19 @@ to set icon to the tab use:
 ```java
 tabLayout.setIcon(0, R.drawable.ic_favorite); // 0 is the position of tab where icon should be added
 tabLayout.setIcon(1, R.drawable.ic_shopping);
+```
+
+you can set font (Typeface) of both badge and tab by using:
+
+```java
+tabLayout.setTabFont(ResourcesCompat.getFont(this, R.font.your_font));
+tabLayout.setBadgeFont(ResourcesCompat.getFont(this, R.font.your_font));
+```
+
+to customize marquee property use:
+```java
+tabLayout.setBadgeTruncateAt(TextUtils.TruncateAt.MIDDLE);
+tabLayout.setTabTruncateAt(TextUtils.TruncateAt.MIDDLE);
 ```
 
 **Note:** by default badges are hidden. You need to set some text to show it up.
