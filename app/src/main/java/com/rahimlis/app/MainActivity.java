@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,28 +39,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
 
-        tabLayout = (BadgedTabLayout) findViewById(R.id.tabs);
+        tabLayout = findViewById(R.id.tabs);
 
         tabLayout.setupWithViewPager(mViewPager);
 
         tabLayout.setIcon(0, R.drawable.ic_favorite);
         tabLayout.setIcon(1, R.drawable.ic_shopping);
 
+
         tabLayout.setBadgeText(0, String.valueOf(counter));
 
         tabLayout.setBadgeText(2, "13213131");
 
+        tabLayout.setTabFont(ResourcesCompat.getFont(this, R.font.trench));
+
+        tabLayout.setBadgeTruncateAt(TextUtils.TruncateAt.MIDDLE);
+        // tabLayout.setTabTextSize(14f);
     }
 
 

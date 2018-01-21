@@ -3,6 +3,8 @@ package com.rahimlis.badgedtablayout;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.graphics.Typeface;
+import android.support.annotation.DimenRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -33,11 +35,15 @@ import android.widget.TextView;
 public class BadgedTabLayout extends TabLayout {
 
 
+    private static final String TAG = "BadgedTabLayout";
     protected ColorStateList badgeBackgroundColors;
     protected ColorStateList badgeTextColors;
     protected float badgeTextSize = 0;
     protected float tabTextSize = 0;
-
+    protected Typeface tabFont = null;
+    protected Typeface badgeFont = null;
+    protected TextUtils.TruncateAt tabTruncateAt = null;
+    protected TextUtils.TruncateAt badgeTruncateAt = null;
 
     public BadgedTabLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -64,8 +70,7 @@ public class BadgedTabLayout extends TabLayout {
                 badgeTextSize = a.getDimension(R.styleable.BadgedTabLayout_badgeTextSize, 0);
 
             if (a.hasValue(R.styleable.BadgedTabLayout_tabTextSize))
-                tabTextSize = a.getDimension(R.styleable.BadgedTabLayout_tabTextSize, 0);
-
+                tabTextSize = a.getDimension(R.styleable.BadgedTabLayout_tabTextSize, getResources().getDimension(R.dimen.tab_text_size));
 
             // We have an explicit selected text color set, so we need to make merge it with the
             // current colors. This is exposed so that developers can use theme attributes to set
@@ -90,13 +95,54 @@ public class BadgedTabLayout extends TabLayout {
         return badgeBackgroundColors;
     }
 
+    public float getTabTextSize() {
+        return tabTextSize;
+    }
+
+    /**
+     * @param tabTextSize in pixels
+     */
+    public void setTabTextSize(float tabTextSize) {
+        this.tabTextSize = tabTextSize;
+        updateTabViews();
+    }
+
+    /**
+     * @param dimensionRes resource value of dimension ex: R.dimen.example
+     */
+    public void setTabTextSize(@DimenRes int dimensionRes) {
+        this.tabTextSize = getResources().getDimension(dimensionRes);
+        updateTabViews();
+    }
 
     public float getBadgeTextSize() {
         return badgeTextSize;
     }
 
+    /**
+     * @param badgeTextSize in pixels
+     */
     public void setBadgeTextSize(float badgeTextSize) {
         this.badgeTextSize = badgeTextSize;
+        updateTabViews();
+    }
+
+    public Typeface getTabFont() {
+        return tabFont;
+    }
+
+    public void setTabFont(Typeface tabFont) {
+        this.tabFont = tabFont;
+        updateTabViews();
+    }
+
+    public Typeface getBadgeFont() {
+        return badgeFont;
+    }
+
+    public void setBadgeFont(Typeface badgeFont) {
+        this.badgeFont = badgeFont;
+        updateTabViews();
     }
 
     /**
@@ -111,6 +157,24 @@ public class BadgedTabLayout extends TabLayout {
 
     public ColorStateList getBadgeTextColors() {
         return badgeTextColors;
+    }
+
+    public TextUtils.TruncateAt getTabTruncateAt() {
+        return tabTruncateAt;
+    }
+
+    public void setTabTruncateAt(TextUtils.TruncateAt tabTruncateAt) {
+        this.tabTruncateAt = tabTruncateAt;
+        updateTabViews();
+    }
+
+    public TextUtils.TruncateAt getBadgeTruncateAt() {
+        return badgeTruncateAt;
+    }
+
+    public void setBadgeTruncateAt(TextUtils.TruncateAt badgeTruncateAt) {
+        this.badgeTruncateAt = badgeTruncateAt;
+        updateTabViews();
     }
 
     /**
@@ -137,6 +201,7 @@ public class BadgedTabLayout extends TabLayout {
     public void updateTabViews() {
         for (int i = 0; i < getTabCount(); i++) {
             TabLayout.Tab tab = getTabAt(i);
+
             if (tab != null)
                 tab.setCustomView(makeCustomView(tab, R.layout.badged_tab));
         }
@@ -151,7 +216,10 @@ public class BadgedTabLayout extends TabLayout {
      */
     private View makeCustomView(TabLayout.Tab tab, int resId) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        View view = inflater.inflate(resId, null);
+        View view = tab.getCustomView() == null ?
+                inflater.inflate(resId, null, false)
+                : tab.getCustomView();
+
 
         makeCustomTitle(tab, view);
 
@@ -168,11 +236,10 @@ public class BadgedTabLayout extends TabLayout {
      */
     private void makeCustomIcon(Tab tab, View view) {
         if (tab.getIcon() == null) {
-            Log.e("BadgedTabLayout", "Tab icon is null. Not setting icon.");
             return;
         }
 
-        ImageView icon = (ImageView) view.findViewById(R.id.imageview_tab_icon);
+        ImageView icon = view.findViewById(R.id.imageview_tab_icon);
 
         DrawableCompat.setTintList(tab.getIcon(), getTabTextColors());
 
@@ -189,9 +256,10 @@ public class BadgedTabLayout extends TabLayout {
     public void setIcon(int position, @DrawableRes int resourse) {
         Tab tab = getTabAt(position);
 
-        if (tab == null)
+        if (tab == null) {
+            Log.e(TAG, "Tab at position " + position + " is not initialized. Check your tablayout implementation and if you properly initialized the view.");
             return;
-
+        }
         tab.setIcon(resourse);
 
         makeCustomIcon(tab, tab.getCustomView());
@@ -202,8 +270,14 @@ public class BadgedTabLayout extends TabLayout {
      * @param view custom view, manually inflated from badged_tab.xml
      */
     private void makeBadge(View view) {
-        TextView badge = (TextView) view.findViewById(R.id.textview_tab_badge);
+        TextView badge = view.findViewById(R.id.textview_tab_badge);
         badge.setTextColor(badgeTextColors);
+
+        if (badgeTruncateAt != null)
+            badge.setEllipsize(badgeTruncateAt);
+
+        if (badgeFont != null)
+            badge.setTypeface(badgeFont);
 
         if (badgeTextSize != 0)
             badge.setTextSize(TypedValue.COMPLEX_UNIT_PX, badgeTextSize);
@@ -217,19 +291,23 @@ public class BadgedTabLayout extends TabLayout {
      * @param view custom view, manually inflated from badged_tab.xml
      */
     private void makeCustomTitle(Tab tab, View view) {
-        TextView title = (TextView) view.findViewById(R.id.textview_tab_title);
+        TextView title = view.findViewById(R.id.textview_tab_title);
 
         title.setTextColor(getTabTextColors());
 
         if (tabTextSize != 0)
-            title.setTextSize(tabTextSize);
+            title.setTextSize(TypedValue.COMPLEX_UNIT_PX, tabTextSize);
+
+        if (tabTruncateAt != null)
+            title.setEllipsize(tabTruncateAt);
+
+        if (tabFont != null)
+            title.setTypeface(tabFont);
 
         if (!TextUtils.isEmpty(tab.getText()))
             title.setText(tab.getText());
-
         else
             title.setVisibility(GONE);
-
     }
 
     /**
@@ -242,8 +320,9 @@ public class BadgedTabLayout extends TabLayout {
             Log.e("BadgedTabLayout", "Tab is null. Not setting custom view");
             return;
         }
-        TextView badge = (TextView) tab.getCustomView().findViewById(R.id.textview_tab_badge);
-        TextView tabText = (TextView) tab.getCustomView().findViewById(R.id.textview_tab_title);
+
+        TextView badge = tab.getCustomView().findViewById(R.id.textview_tab_badge);
+        TextView tabText = tab.getCustomView().findViewById(R.id.textview_tab_title);
 
         if (text == null) {
             badge.setVisibility(View.GONE);

@@ -31,7 +31,8 @@
             android:layout_height="wrap_content"
             app:badgeBackgroundColor="@color/badge_background_color"
             app:badgeTextSize="11sp"
-            app:tabIndicatorColor="#4f4" />
+            app:tabIndicatorColor="#4f4"
+            />
 
     </android.support.design.widget.AppBarLayout>
 

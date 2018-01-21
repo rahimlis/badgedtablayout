@@ -2,4 +2,5 @@
 <resources>
     <dimen name="tab_text_max_width">60dp</dimen>
     <dimen name="badge_text_size">11sp</dimen>
+    <dimen name="tab_text_size">11sp</dimen>
 </resources>
