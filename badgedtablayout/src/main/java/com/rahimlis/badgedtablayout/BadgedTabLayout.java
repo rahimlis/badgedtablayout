@@ -44,6 +44,9 @@ public class BadgedTabLayout extends TabLayout {
     protected Typeface badgeFont = null;
     protected TextUtils.TruncateAt tabTruncateAt = null;
     protected TextUtils.TruncateAt badgeTruncateAt = null;
+    protected boolean isSpanText = false;
+    protected int maxWidthText = -1;
+
 
     public BadgedTabLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -97,6 +100,22 @@ public class BadgedTabLayout extends TabLayout {
 
     public float getTabTextSize() {
         return tabTextSize;
+    }
+
+    /**
+     * @param maxWidthText in pixels
+     */
+    public void setMaxWidthText(int maxWidthText) {
+        this.maxWidthText = maxWidthText;
+        updateTabViews();
+    }
+
+    /**
+     * @param isSpanText in boolean
+     */
+    public void isSpanText(boolean isSpanText) {
+        this.isSpanText = isSpanText;
+        updateTabViews();
     }
 
     /**
@@ -303,6 +322,15 @@ public class BadgedTabLayout extends TabLayout {
 
         if (tabFont != null)
             title.setTypeface(tabFont);
+
+        if (isSpanText) {
+            title.setSingleLine(false);
+            title.setMarqueeRepeatLimit(-1);
+            title.setEllipsize(TextUtils.TruncateAt.MIDDLE);
+        }
+
+        if (maxWidthText != -1)
+            title.setMaxWidth(maxWidthText);
 
         if (!TextUtils.isEmpty(tab.getText()))
             title.setText(tab.getText());

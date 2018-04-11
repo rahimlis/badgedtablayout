@@ -66,6 +66,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         tabLayout.setBadgeTruncateAt(TextUtils.TruncateAt.MIDDLE);
         // tabLayout.setTabTextSize(14f);
+//        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+//        tabLayout.isSpanText(true);
+//        tabLayout.setMaxWidthText(5000);
     }
 
 
