@@ -20,7 +20,7 @@ allprojects {
 
 ```groovy
 dependencies {
-  compile 'com.github.rahimlis:badgedtablayout:v1.2'
+  implementation 'com.github.rahimlis:badgedtablayout:v1.2'
 }
 ```
 
